@@ -42,7 +42,7 @@ This project consists of two backend services that manage user accounts and tran
 
     ```sh
     git clone <repository-url>
-    cd backend-assignment
+    cd attis
     ```
 
 2. **Set Up Environment Variables:**
