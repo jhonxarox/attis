@@ -1,59 +1,114 @@
-# Take home assignment
+# Backend Assignment (Attis)
 
+## Description
 
-## Description:
-Build 2 Backend services which manages user’s accounts and transactions (send/withdraw). 
+This project consists of two backend services that manage user accounts and transactions (send/withdraw).
 
-In Account Manager service, we have:
-- User: Login with Id/Password
-- Payment Account: One user can have multiple accounts like credit, debit, loan...
-- Payment History: Records of transactions
+### Account Manager Service
+- **User:** Login with ID/Password
+- **Payment Account:** One user can have multiple accounts (e.g., credit, debit, loan)
+- **Payment History:** Records of transactions
 
-In Payment Manager service, we have:
-- Transaction: Include basic information like amount, timestamp, toAddress, status...
-- We have a core transaction process function, that will be executed by `/send` or `/withdraw` API:
+### Payment Manager Service
+- **Transaction:** Basic information like amount, timestamp, toAddress, status
+- **Core transaction process function:** This function will be executed by `/send` or `/withdraw` API
 
-```js
-function processTransaction(transaction) {
-    return new Promise((resolve, reject) => {
-        console.log('Transaction processing started for:', transaction);
+## Features
 
-        // Simulate long running process
-        setTimeout(() => {
-            // After 30 seconds, we assume the transaction is processed successfully
-            console.log('transaction processed for:', transaction);
-            resolve(transaction);
-        }, 30000); // 30 seconds
-    });
-}
+1. Users need to register/log in and then be able to call APIs.
+2. APIs for two operations: send/withdraw. Account statements will be updated after the transaction is successful.
+3. APIs to retrieve all accounts and transactions per account of the user.
+4. Write Swagger docs for implemented APIs (Optional)
+5. Auto Debit/Recurring Payments: Users should be able to set up recurring payments. These payments will automatically be processed at specified intervals. (Optional)
 
-// Example usage
-let transaction = { amount: 100, currency: 'USD' }; // Sample transaction input
-processTransaction(transaction)
-    .then((processedTransaction) => {
-        console.log('transaction processing completed for:', processedTransaction);
-    })
-    .catch((error) => {
-        console.error('transaction processing failed:', error);
-    });
-```
+## Tech-stack
 
-Features:
-- Users need to register/log in and then be able to call APIs.
-- APIs for 2 operations send/withdraw. Account statements will be updated after the transaction is successful.
-- APIs to retrieve all accounts and transactions per account of the user.
-- Write Swagger docs for implemented APIs (Optional)
-- Auto Debit/Recurring Payments: Users should be able to set up recurring payments. These payments will automatically be processed at specified intervals. (Optional)
+- **Authentication:** Recommended using authentication 3rd party (Supertokens, Supabase, etc.)
+- **API Server:** Golang (Gin framework)
+- **Database:** PostgreSQL
+- **Containerization:** Docker (docker-compose)
 
-### Tech-stack:
-- Recommend using authentication 3rd party: Supertokens, Supabase...
-- `NodeJs/Golang` for API server (`Fastify/Gin` framework is the best choices)
-- `PostgreSQL/MongoDB` for Database. Recommend using `Prisma` for ORM.
-- `Docker` for containerization. Recommend using `docker-compose` for running containers.
- 
-## Target:
-- Good document/README to describe your implementation.
-- Make sure app functionality works as expected. Run and test it well.
-- Containerized and run the app using Docker.
-- Using `docker-compose` or any automation script to run the app with single command is a plus.
-- Job schedulers utilization is a plus
+## Preparation
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+- Golang (1.20 or later)
+
+### Steps
+
+1. **Clone the Repository:**
+
+    ```sh
+    git clone <repository-url>
+    cd backend-assignment
+    ```
+
+2. **Set Up Environment Variables:**
+
+    Create a `.env` file in the root directory of the project with the following content:
+
+    ```env
+    DB_HOST=db
+    DB_USER=postgres
+    DB_PASSWORD=postgres
+    DB_NAME=postgres
+    DB_PORT=5432
+    ```
+
+3. **Install Dependencies:**
+
+    Ensure all dependencies are resolved and `go.sum` is generated:
+
+    ```sh
+    go mod tidy
+    ```
+
+## Running the Project
+
+1. **Build and Run the Containers:**
+
+    Use Docker Compose to build and run the containers:
+
+    ```sh
+    docker-compose up --build
+    ```
+
+    This command will:
+    - Build the Go application
+    - Start the PostgreSQL database
+    - Run the Go application on `http://localhost:8080`
+
+## Project Structure
+
+    backend-assignment/
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── go.mod
+    ├── go.sum
+    ├── main.go
+    ├── .env
+    └── models/
+        ├── account.go
+        ├── transaction.go
+        └── user.go
+    └── routes/
+        ├── account.go
+        ├── auth.go
+        └── transaction.go
+    
+
+## API Endpoints
+
+### Auth
+- **POST /register:** Register a new user
+- **POST /login:** Login a user
+
+### Accounts
+- **POST /accounts:** Create a new account
+- **GET /accounts/:userId:** Get all accounts for a user
+
+### Transactions
+- **POST /transactions:** Create a new transaction (send/withdraw)
+- **GET /transactions/:accountId:** Get all transactions for an account
